@@ -110,6 +110,6 @@ const compression = require("compression");
     console.info(`The server has started on port: ${port}`);
     const bind =
       typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-    debug("Retail Eazy server Listening on " + bind);
+    debug("Manage DMS server Listening on " + bind);
   });
 // }
