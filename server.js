@@ -11,7 +11,12 @@ const bodyparser = require("body-parser");
 const debug = require("debug");
 const numCPUs = os.cpus().length;
 const AuthRoutes = require("./Routes/AuthRoutes");
+const GlobalRoutes = require("./Routes/GlobalRoutes");
+const DashboardRoutes = require("./Routes/DashboardRoutes");
+const MasterRoutes = require("./Routes/MasterRoutes");
+const ExcelUploadRoutes = require("./Routes/ExcelUploadRoutes");
 const compression = require("compression");
+const routerModule = require('./Routes');
 // const db = require("./database/models/index");
 // db.sequelize.sync();
 
@@ -70,7 +75,14 @@ const compression = require("compression");
       threshold: 9,
     })
   );
+   // TODO ::route need to be implemented dynamically
+    routerModule(app);
+
   app.use("/apiservice/api/Login", AuthRoutes);
+  // app.use("/apiservice/api", GlobalRoutes);
+  // app.use("/apiservice/api", DashboardRoutes);
+  // app.use("/apiservice/api", MasterRoutes);
+  // app.use("/apiservice/api", ExcelUploadRoutes);
 
 
   app.use(
