@@ -11,6 +11,9 @@ const bodyparser = require("body-parser");
 const debug = require("debug");
 const numCPUs = os.cpus().length;
 const AuthRoutes = require("./Routes/AuthRoutes");
+const MasterRoutes = require("./Routes/MasterRoutes");
+const GlobalRoutes = require("./Routes/GlobalRoutes");
+const UserMasterRoutes = require("./Routes/UserMasterRoutes");
 const compression = require("compression");
 // const db = require("./database/models/index");
 // db.sequelize.sync();
@@ -71,8 +74,9 @@ const compression = require("compression");
     })
   );
   app.use("/apiservice/api/Login", AuthRoutes);
-
-
+  app.use("/api/Master", MasterRoutes)
+  app.use("/api/Global", GlobalRoutes)
+  app.use("/api/User", UserMasterRoutes)
   app.use(
     cors({
       origin: "*",
