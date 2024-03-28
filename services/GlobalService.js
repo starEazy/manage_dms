@@ -10,7 +10,15 @@ const {
 } = require('../apps/helpers/customResponseTemplate')
 
 class GlobalService {
+
+  // --------------------------GetUserList -----------------------------------//
   static async getUserList() {
+    const objResultSet = {
+      status: false,
+      statuscode: 417,
+      message: '',
+      dtList: null,
+    }
     try {
       let sQuery = `
                 SELECT DISTINCT * FROM tbl_usermaster WHERE usertype <> '10' AND isactive = TRUE
@@ -19,23 +27,33 @@ class GlobalService {
 
       const dtUserList = await postgreConnection.query(sQuery) // Assuming you have a function to execute queries
       console.log('dtUserList', dtUserList)
-      const objResultSet = {
-        statuscode: 200,
-        status: true,
-        message: 'All User List',
-        dtList: dtUserList,
-      }
-
-      return objResultSet
+      ;(objResultSet.statuscode = 200),
+        (objResultSet.status = true),
+        (objResultSet.message = 'All User List'),
+        (objResultSet.dtList = dtUserList)
     } catch (error) {
       writeLog('-----GetUserList Exception-----', error.message)
+      objResultSet.status = false
+      objResultSet.message = error.message
       throw error
+    } finally {
+      return objResultSet
     }
   }
 
+
+    // --------------------------GetUserRoleList -----------------------------------//
+
+
   static async getUserRoleList(FormId, tokenDetails) {
+    const objResultSet = {
+      status: false,
+      statuscode: 417,
+      message: '',
+      dtList: null,
+    }
+
     try {
-      let objResultSet = {}
       const sQuery = `
           SELECT roleid,
                  COALESCE(mnucreate, FALSE) AS addnew,
@@ -51,29 +69,41 @@ class GlobalService {
 
       const dtAllModuleList = await postgreConnection.query(sQuery)
       console.log('dtAllModuleList', dtAllModuleList)
-      objResultSet = {
-        statuscode: 200,
-        status: true,
-        message: 'All User Role List',
-        dtList: dtAllModuleList,
-      }
 
-      return objResultSet
+      ;(objResultSet.statuscode = 200),
+        (objResultSet.status = true),
+        (objResultSet.message = 'All User Role List'),
+        (objResultSet.dtList = dtAllModuleList)
     } catch (error) {
-      console.error('Error executing query:', error)
-
-      throw new Error(error.message)
+      console.error('GenerateNewCode Exception:', error.message)
+      objResultSet.status = false
+      objResultSet.message = error.message
+      throw error
+    } finally {
+      return objResultSet
     }
   }
 
+
+    // --------------------------GetGenrateNewCode--------------------------------------//
+
+
   static async generateNewCode(id) {
-    let objResultSet = { status: false, message: '' }
+    const objResultSet = {
+      status: false,
+      message: '',
+      dtCountryList: null,
+      dtStateList: null,
+      dtCityList: null,
+    }
 
     try {
       let sQuery = `
       SELECT * FROM tbl_generate_newcode 
       WHERE isactive = true AND id = ${id}
     `
+      writeLog('-----Get tbl_generate_newcode Data Query-----  ' + sQuery)
+
       let dt = await postgreConnection.query(sQuery)
       console.log('2222222222', dt)
       //    const row = dt.rows[0]
@@ -108,8 +138,9 @@ class GlobalService {
       objResultSet.status = false
       objResultSet.message = error.message
       throw error
+    } finally {
+      return objResultSet
     }
-    return objResultSet
   }
 }
 

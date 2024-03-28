@@ -11,10 +11,12 @@ const joiOptions = {
   stripUnknown: true, // remove unknown props
 }
 
-class GetUserController extends GlobalService {
+class GlobalController extends GlobalService {
   constructor() {
     super()
   }
+
+  // --------------------------GetUserList -----------------------------------//
 
   static async getUserList(req, res) {
     try {
@@ -24,19 +26,14 @@ class GetUserController extends GlobalService {
       const objResponse = await GlobalService.getUserList()
 
       writeLog('GetUserList Result : ', objResponse)
-      res.status(200).json({
-        status: true,
-        message: 'Successfully',
-        data: objResponse.dtList,
-      })
+      return successResponse(req, res, 'Successfully', objResponse)
     } catch (error) {
       writeLog('Error in getUserList:', error)
-      res.status(500).json({
-        status: false,
-        message: error.message,
-      })
+      return errorResponse(req, res, error.message, objResponse)
     }
   }
+
+  // --------------------------GetUserRoleList -----------------------------------//
 
   static async getUserRoleList(req, res) {
     try {
@@ -64,9 +61,11 @@ class GetUserController extends GlobalService {
       writeLog('GetUserRoleList Error: ', error)
 
       // Returning error response
-      return errorResponse(req, res, error.message, null)
+      return errorResponse(req, res, error.message, objResponse)
     }
   }
+
+  // --------------------------GetGenrateNewCode--------------------------------------//
 
   static async generateNewCode(req, res) {
     try {
@@ -89,4 +88,4 @@ class GetUserController extends GlobalService {
   }
 }
 
-module.exports = GetUserController
+module.exports = GlobalController
