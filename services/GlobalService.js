@@ -1,3 +1,5 @@
+'use strict'
+
 const {
   writeLog,
   DbNull,
@@ -20,17 +22,14 @@ class GlobalService {
       dtList: null,
     }
     try {
-      let sQuery = `
-                SELECT DISTINCT * FROM tbl_usermaster WHERE usertype <> '10' AND isactive = TRUE
-            `
+      let sQuery = `SELECT DISTINCT * FROM tbl_usermaster WHERE usertype <> '10' AND isactive = TRUE`
       writeLog('-----GetUserList Query-----', sQuery)
 
       const dtUserList = await postgreConnection.query(sQuery) // Assuming you have a function to execute queries
-      console.log('dtUserList', dtUserList)
-      ;(objResultSet.statuscode = 200),
-        (objResultSet.status = true),
-        (objResultSet.message = 'All User List'),
-        (objResultSet.dtList = dtUserList)
+        objResultSet.statuscode = 200,
+        objResultSet.status = true,
+        objResultSet.message = 'All User List',
+        objResultSet.dtList = dtUserList
     } catch (error) {
       writeLog('-----GetUserList Exception-----', error.message)
       objResultSet.status = false
@@ -68,14 +67,12 @@ class GlobalService {
       writeLog('-----GetUserRoleList Query-----  ' + sQuery)
 
       const dtAllModuleList = await postgreConnection.query(sQuery)
-      console.log('dtAllModuleList', dtAllModuleList)
-
-      ;(objResultSet.statuscode = 200),
-        (objResultSet.status = true),
-        (objResultSet.message = 'All User Role List'),
-        (objResultSet.dtList = dtAllModuleList)
+        objResultSet.statuscode = 200,
+        objResultSet.status = true,
+        objResultSet.message = 'All User Role List',
+        objResultSet.dtList = dtAllModuleList
     } catch (error) {
-      console.error('GenerateNewCode Exception:', error.message)
+      writeLog('GenerateNewCode Exception:', error.message)
       objResultSet.status = false
       objResultSet.message = error.message
       throw error
@@ -98,25 +95,13 @@ class GlobalService {
     }
 
     try {
-      let sQuery = `
-      SELECT * FROM tbl_generate_newcode 
-      WHERE isactive = true AND id = ${id}
-    `
+      let sQuery = `SELECT * FROM tbl_generate_newcode WHERE isactive = true AND id = ${id}`
       writeLog('-----Get tbl_generate_newcode Data Query-----  ' + sQuery)
 
       let dt = await postgreConnection.query(sQuery)
-      console.log('2222222222', dt)
-      //    const row = dt.rows[0]
-      console.log(dt[0].columnname)
-
       if (dt.length > 0) {
-        console.log('Result or rows is empty or undefined')
-        sQuery = `
-        SELECT * FROM generate_code('${dt[0].columnname}', '${dt[0].startkey}', '${dt[0].tablename}')
-      `
-        console.log(sQuery)
+        sQuery = ` SELECT * FROM generate_code('${dt[0].columnname}', '${dt[0].startkey}', '${dt[0].tablename}')`
         let dtGenerateCode = await postgreConnection.query(sQuery)
-        console.log('dtGenerateCode', dtGenerateCode)
         writeLog('-----GenerateNewCode Query-----  ' + sQuery)
 
         if (
@@ -131,10 +116,10 @@ class GlobalService {
           objResultSet.message = dt[0].startkey + dt[0].startnumber
         }
       } else {
-        console.log(error)
+        objResultSet.status = false;
       }
     } catch (error) {
-      console.error('GenerateNewCode Exception:', error.message)
+      writeLog('GenerateNewCode Exception:', error.message)
       objResultSet.status = false
       objResultSet.message = error.message
       throw error

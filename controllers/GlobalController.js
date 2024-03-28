@@ -1,3 +1,5 @@
+'use strict'
+
 const GlobalService = require('../services/GlobalService')
 const { writeLog } = require('../apps/helpers/utils')
 const {
@@ -37,12 +39,9 @@ class GlobalController extends GlobalService {
 
   static async getUserRoleList(req, res) {
     try {
-      //  const formId = req.params;
-      //   console.log(formId);
+     
       const tokenDetails = req.user
-      console.log('1111111111', req.user)
       const formId = parseInt(req.params.FormId)
-      console.log(formId)
 
       // Call the service method to get user role list
       const objResponse = await GlobalService.getUserRoleList(
@@ -52,15 +51,10 @@ class GlobalController extends GlobalService {
 
       // Logging
       writeLog('GetUserRoleList Result : ', objResponse)
-
-      // Returning response
       return successResponse(req, res, 'Successfully', objResponse)
     } catch (error) {
       // Logging error
-      console.log(error)
-      writeLog('GetUserRoleList Error: ', error)
-
-      // Returning error response
+      writeLog('GetUserRoleList Error: ', error.message)
       return errorResponse(req, res, error.message, objResponse)
     }
   }
@@ -70,10 +64,7 @@ class GlobalController extends GlobalService {
   static async generateNewCode(req, res) {
     try {
       const tokenDetails = req.user
-      console.log('1111111111', req.user)
-
       const id = parseInt(req.params.id)
-      console.log(id)
       writeLog('--Start GenerateNewCode API----')
 
       const result = await GlobalService.generateNewCode(id)
@@ -82,7 +73,7 @@ class GlobalController extends GlobalService {
 
       return successResponse(req, res, 'Successfully', result.message)
     } catch (error) {
-      console.log(error)
+      writeLog('GenerateNewCode Error: ', error.message)
       return errorResponse(req, res, 'Error occurred', error.message)
     }
   }
